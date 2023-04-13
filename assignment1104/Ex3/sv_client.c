@@ -41,17 +41,21 @@ int main(int argc, char *argv[]){
 
     // Gui tin nhan den server
     char buf[ID_LENGTH + NAME_LENGTH + DOB_LENGTH + GPA_LENGTH];
-    while(1){
+    // while(1){
         printf("Nhap du lieu sinh vien: \n");
 
         printf("ID: ");
         scanf("%d", &student.id);
+        fflush(stdin);
         printf("Name: ");
         scanf("%s", student.name);
+        fflush(stdin);
         printf("Date of birth: ");
         scanf("%s", student.dob);
+        fflush(stdin);
         printf("GPA: ");
         scanf("%f", &student.gpa);
+        fflush(stdin);
 
         int offset = 0;
         memcpy(buf + offset, &student.id, ID_LENGTH);
@@ -62,13 +66,14 @@ int main(int argc, char *argv[]){
         offset += DOB_LENGTH;
         memcpy(buf + offset, &student.gpa, GPA_LENGTH);
 
-        printf("Tiep tuc? (Y/N): ");
-        scanf("%s", buf);
-        if(strncmp(buf, "N", 1) == 0){
-            break;
-        }
+        // printf("Tiep tuc? (Y/N): ");
+        // scanf("%s", buf);
+        // fflush(stdin);
+        // if(strncmp(buf, "N", 1) == 0){
+        //     break;
+        // }
         send(client, buf, sizeof(buf), 0);
-    }
+    // }
 
     close(client);
     return 0;

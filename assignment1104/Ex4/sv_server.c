@@ -72,6 +72,7 @@ int main(int argc, char *argv[])
 
     // Tao string luu thong tin client gui
     char buf[BUFFER_SIZE];    
+    memset(buf,0,BUFFER_SIZE);
 
     // Tao bien lay thoi gian
     time_t current_time;
@@ -80,7 +81,7 @@ int main(int argc, char *argv[])
     int ret;
 
     while (1){
-        ret = recv(client, buf, sizeof(buf), 0);
+        ret = recv(client, buf, BUFFER_SIZE, 0);
         if (ret <= 0){
             break;
         }
@@ -100,20 +101,23 @@ int main(int argc, char *argv[])
 
         // Thong tin client gui
         // Hien thi ra man hinh
+        fflush(stdin);
         printf("Received data at %04d-%02d-%02d %02d:%02d:%02d:\n",
            time_info->tm_year + 1900, time_info->tm_mon + 1, time_info->tm_mday,
            time_info->tm_hour, time_info->tm_min, time_info->tm_sec);
-            printf("  MSSV: %s\n", student.mssv);
-            printf("  Name: %s\n", student.name);
-            printf("  Date of birth: %s\n", student.date);
-            printf("  GPA: %.2f\n", student.gpa);
+        printf("  MSSV: %s\n", student.mssv);
+        printf("  Name: %s\n", student.name);
+        printf("  Date of birth: %s\n", student.date);
+        printf("  GPA: %.2f\n", student.gpa);
         
         // Ghi vao log_file
         fprintf(f, "%04d-%02d-%02d %02d:%02d:%02d %s %s %s %.2f\n",
             time_info->tm_year + 1900, time_info->tm_mon + 1, time_info->tm_mday,
             time_info->tm_hour, time_info->tm_min, time_info->tm_sec,
             student.mssv, student.name, student.date, student.gpa);
-            fflush(f);
+        fflush(f);
+        
+        printf("Saved");
     }
     
     fclose(f);
