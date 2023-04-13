@@ -64,21 +64,21 @@ int main(int argc, char *argv[])
 
     // Mo file de ghi thong tin client gui
     f = fopen(filename_recv,"w");
-    char bufRRecv[2048];    // Tao string luu thong tin client gui
+    char bufRecv[2048];    // Tao string luu thong tin client gui
     int ret;
 
     while (1){
-        ret = recv(client, bufRRecv, sizeof(bufRRecv), 0);
+        ret = recv(client, bufRecv, sizeof(bufRecv), 0);
         if (ret <= 0){
             break;
         }
         
-        if (ret < sizeof(bufRRecv)){
-            bufRRecv[ret] = 0;
+        if (ret < sizeof(bufRecv)){
+            bufRecv[ret] = 0;
         }
         // Thong tin client gui
-        printf("%d bytes received: %s", ret, bufRRecv);
-        fprintf(f, "%s", bufRRecv);
+        printf("%d bytes received: %s", ret, bufRecv);
+        fprintf(f, "%s", bufRecv);
     }
     
     fclose(f);
