@@ -76,6 +76,11 @@ int main(int argc, char *argv[])
         if (ret < sizeof(bufRecv)){
             bufRecv[ret] = 0;
         }
+
+        if(strcmp(bufRecv, "exit") == 0){
+            break;
+        }
+
         // Thong tin client gui
         printf("%d bytes received: %s", ret, bufRecv);
         fprintf(f, "%s", bufRecv);
