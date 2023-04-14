@@ -58,9 +58,8 @@ int main(int argc, char *argv[])
     char buf[1024];    
     memset(buf,0,1024);
 
-    
     int ret;
-
+    
     while (1){
         ret = recv(client, buf, 1024, 0);
         if (ret <= 0){
@@ -71,6 +70,9 @@ int main(int argc, char *argv[])
             buf[ret] = 0;
         }
 
+        if(strncmp(buf, "N", 1) == 0){
+            break;
+        }
 
         // Tao bien lay thoi gian
         time_t current_time = time(NULL);
@@ -81,7 +83,7 @@ int main(int argc, char *argv[])
         printf("%s %s %s", inet_ntoa(client_addr.sin_addr), formated_time, buf);
         fprintf(f, "%s %s %s", inet_ntoa(client_addr.sin_addr), formated_time, buf);
         
-        printf("Saved");
+        printf("Saved\n");
     }
     
     fclose(f);

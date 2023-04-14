@@ -36,12 +36,16 @@ int main(int argc, char *argv[]){
 
         printf("  MSSV: ");
         fgets(mssv, 1024, stdin);
+        mssv[strcspn(mssv, "\n")] = 0;
         printf("  Ho ten: ");
         fgets(hoten, 1024, stdin);
+        hoten[strcspn(hoten, "\n")] = 0;
         printf("  Ngay sinh: ");
         fgets(ngaysinh, 1024, stdin);
+        ngaysinh[strcspn(ngaysinh, "\n")] = 0;
         printf("  GPA: ");
         fgets(gpa, 1024, stdin);
+        gpa[strcspn(gpa, "\n")] = 0;
 
         // Dong goi du lieu
         char buf[4*1024 + 1];
@@ -51,7 +55,7 @@ int main(int argc, char *argv[]){
         send(client, buf, sizeof(buf), 0);
 
         printf("Tiep tuc? (Y/N): ");
-        scanf("%s", buf);
+        fgets(buf, 1024, stdin);
         fflush(stdin);
         if(strncmp(buf, "N", 1) == 0){
             break;
