@@ -7,19 +7,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define BUFFER_SIZE 1024
-#define MSSV_LENGTH 10
-#define NAME_LENGTH 50
-#define DATE_LENGTH 20
-#define GPA_LENGTH 4
-
-struct student_info {
-    char mssv[MSSV_LENGTH + 1];
-    char name[NAME_LENGTH + 1];
-    char date[DATE_LENGTH + 1];
-    float gpa;
-};
-
 int main(int argc, char *argv[])
 {
     int listener = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -64,24 +51,18 @@ int main(int argc, char *argv[])
     // Khai bao ten file
     char *log_file = argv[2];
 
-    // Khai bao student
-    struct student_info student;
-
     // Mo file de ghi thong tin client gui
     FILE *f = fopen(log_file,"a");
 
     // Tao string luu thong tin client gui
-    char buf[BUFFER_SIZE];    
-    memset(buf,0,BUFFER_SIZE);
+    char buf[1024];    
+    memset(buf,0,1024);
 
-    // Tao bien lay thoi gian
-    time_t current_time;
-    struct tm *time_info;
     
     int ret;
 
     while (1){
-        ret = recv(client, buf, BUFFER_SIZE, 0);
+        ret = recv(client, buf, 1024, 0);
         if (ret <= 0){
             break;
         }
@@ -90,32 +71,15 @@ int main(int argc, char *argv[])
             buf[ret] = 0;
         }
 
-        memset(&student, 0, sizeof(student));
-        strncpy(student.mssv, buf, MSSV_LENGTH);
-        strncpy(student.name, buf + MSSV_LENGTH, NAME_LENGTH);
-        strncpy(student.date, buf + MSSV_LENGTH + NAME_LENGTH, DATE_LENGTH);
-        student.gpa = atof(buf + MSSV_LENGTH + NAME_LENGTH + DATE_LENGTH);
 
-        time(&current_time);
-        time_info = localtime(&current_time);
+        // Tao bien lay thoi gian
+        time_t current_time = time(NULL);
+        char *formated_time = ctime(&current_time);
+        formated_time[strlen(formated_time) - 1] = '\0';
 
         // Thong tin client gui
-        // Hien thi ra man hinh
-        fflush(stdin);
-        printf("Received data at %04d-%02d-%02d %02d:%02d:%02d:\n",
-           time_info->tm_year + 1900, time_info->tm_mon + 1, time_info->tm_mday,
-           time_info->tm_hour, time_info->tm_min, time_info->tm_sec);
-        printf("  MSSV: %s\n", student.mssv);
-        printf("  Name: %s\n", student.name);
-        printf("  Date of birth: %s\n", student.date);
-        printf("  GPA: %.2f\n", student.gpa);
-        
-        // Ghi vao log_file
-        fprintf(f, "%04d-%02d-%02d %02d:%02d:%02d %s %s %s %.2f\n",
-            time_info->tm_year + 1900, time_info->tm_mon + 1, time_info->tm_mday,
-            time_info->tm_hour, time_info->tm_min, time_info->tm_sec,
-            student.mssv, student.name, student.date, student.gpa);
-        fflush(f);
+        printf("%s %s %s", inet_ntoa(client_addr.sin_addr), formated_time, buf);
+        fprintf(f, "%s %s %s", inet_ntoa(client_addr.sin_addr), formated_time, buf);
         
         printf("Saved");
     }

@@ -7,22 +7,7 @@
 #include <arpa/inet.h>
 #include <stdlib.h>
 
-#define ID_LENGTH sizeof(int)
-#define NAME_LENGTH 50
-#define DOB_LENGTH 20
-#define GPA_LENGTH sizeof(float)
-
-struct student_info {
-    int id;
-    char name[NAME_LENGTH];
-    char dob[DOB_LENGTH];
-    float gpa;
-};
-
 int main(int argc, char *argv[]){
-    // Khai bao cau truc
-    struct student_info student;
-
     // Khai bao socket
     int client = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
@@ -40,31 +25,30 @@ int main(int argc, char *argv[]){
     }
 
     // Gui tin nhan den server
-    char buf[ID_LENGTH + NAME_LENGTH + DOB_LENGTH + GPA_LENGTH];
     while(1){
+        char mssv[1024], hoten[1024], ngaysinh[1024], gpa[1024];
+        memset(mssv, 0, 1024);
+        memset(hoten, 0, 1024);
+        memset(ngaysinh, 0, 1024);
+        memset(gpa, 0, 1024);
+        
         printf("Nhap du lieu sinh vien: \n");
 
-        printf("ID: ");
-        scanf("%d", &student.id);
-        fflush(stdin);
-        printf("Name: ");
-        scanf("%s", student.name);
-        fflush(stdin);
-        printf("Date of birth: ");
-        scanf("%s", student.dob);
-        fflush(stdin);
-        printf("GPA: ");
-        scanf("%f", &student.gpa);
-        fflush(stdin);
+        printf("  MSSV: ");
+        fgets(mssv, 1024, stdin);
+        printf("  Ho ten: ");
+        fgets(hoten, 1024, stdin);
+        printf("  Ngay sinh: ");
+        fgets(ngaysinh, 1024, stdin);
+        printf("  GPA: ");
+        fgets(gpa, 1024, stdin);
 
-        int offset = 0;
-        memcpy(buf + offset, &student.id, ID_LENGTH);
-        offset += ID_LENGTH;
-        memcpy(buf + offset, student.name, NAME_LENGTH);
-        offset += NAME_LENGTH;
-        memcpy(buf + offset, student.dob, DOB_LENGTH);
-        offset += DOB_LENGTH;
-        memcpy(buf + offset, &student.gpa, GPA_LENGTH);
+        // Dong goi du lieu
+        char buf[4*1024 + 1];
+        memset(buf, 0, 4*1024+1);
+        sprintf(buf, "%s %s %s %s\n", mssv, hoten, ngaysinh, gpa);
+
+        send(client, buf, sizeof(buf), 0);
 
         printf("Tiep tuc? (Y/N): ");
         scanf("%s", buf);
@@ -72,7 +56,6 @@ int main(int argc, char *argv[]){
         if(strncmp(buf, "N", 1) == 0){
             break;
         }
-        send(client, buf, sizeof(buf), 0);
     }
 
     close(client);
