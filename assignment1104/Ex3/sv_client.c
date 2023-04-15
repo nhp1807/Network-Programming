@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
         memset(buf, 0, 4*1024+1);
         sprintf(buf, "%s %s %s %s\n", mssv, hoten, ngaysinh, gpa);
 
-        send(client, buf, sizeof(buf), 0);
+        send(client, buf, strlen(buf), 0);
 
         printf("Tiep tuc? (Y/N): ");
         fgets(buf, 1024, stdin);
