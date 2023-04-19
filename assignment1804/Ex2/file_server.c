@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     server_addr.sin_port = htons(9000);
 
-    // Tạo socket
+    // Tao socket
     int server = socket(AF_INET, SOCK_STREAM, 0);
     if (server == -1)
     {
@@ -26,22 +26,21 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    // Gán địa chỉ cho socket
+    // Gan dia chi cho socket
     if (bind(server, (struct sockaddr *)&server_addr, sizeof(server_addr)) == -1)
     {
         perror("bind() failed");
         exit(EXIT_FAILURE);
     }
 
-    // Lắng nghe kết nối
+    // Lang nghe ket noi
     if (listen(server, MAX_CLIENT) == -1)
     {
         perror("listen() failed");
         exit(EXIT_FAILURE);
     }
-    printf("Waiting for client on %s:%s\n", inet_ntoa(server_addr.sin_addr), argv[1]);
 
-    // Chấp nhận kết nối từ client
+    // Chap nhan ket noi cuar client
     struct sockaddr_in client_addr;
     memset(&client_addr, 0, sizeof(client_addr));
     socklen_t client_addr_len = sizeof(client_addr);
@@ -51,40 +50,41 @@ int main(int argc, char *argv[])
         perror("accept() failed");
         exit(EXIT_FAILURE);
     }
-    printf("Connection from %s %d port [tcp/*] succeeded!\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
-    // Nhận dữ liệu từ client
+    // Nhan du lieu tu client
     int count = 0;
-    char buf[20], receive[21];
-    memset(buf, 'x', 9);
-    memset(buf + 9, 0, 11);
+    int i;
+    char bufRecv[2048];
+    memset(bufRecv, 0, 2048);
     while (1)
     {
-        memset(receive, 0, 21);
-        int bytes_received = recv(client, receive, 20, 0);
-        receive[bytes_received] = '\0';
-        if (bytes_received == -1)
-        {
-            perror("recv() failed");
-            exit(EXIT_FAILURE);
-        }
-        else if (bytes_received == 0)
-        {
-            printf("Count: %d\n", count);
+        int ret = recv(client, bufRecv, sizeof(bufRecv), 0);
+        bufRecv[ret] = '\0';
+        char subStr[] = "0123456789";
+        if (ret <= 0){
             break;
         }
-        strncat(buf, receive, 10);
-        if (strstr(buf, "0123456789") != NULL)
-        {
-            count++;
+        
+        if (ret < sizeof(bufRecv)){
+            bufRecv[ret] = 0;
         }
-        strcpy(buf, buf + 10);
-        strcat(buf, receive + 10);
-        if (strstr(buf, "0123456789") != NULL)
-        {
-            count++;
+
+        int len_str = strlen(bufRecv);
+        int len_subtr = strlen(subStr);
+
+        if(len_str < len_subtr){
+            break;
         }
-        strcpy(buf, buf + 10);
+
+        for(i = 0; i <= len_str - len_subtr; i++){
+            if(strncmp(bufRecv + i, subStr, len_subtr) ==  0){
+                count++;
+            }
+        }
+
+        // Thong tin client gui
+        printf("%s xuat hien %d lan\n", subStr, count);
+        
     }
     close(client);
     close(server);

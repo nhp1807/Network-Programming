@@ -31,16 +31,15 @@ int main(){
         exit(EXIT_FAILURE);
     }
 
-    // Đọc file và gửi dữ liệu
-    char buf[21];
-    memset(buf, 0, 21);
+    // Doc file du lieu
+    char bufSend[2048];
     while (!feof(f))
     {
-        // Đọc dữ liệu từ file
-        fgets(buf, 21, f);
+        // Doc du lieu tu file file.txt
+        fgets(bufSend, sizeof(bufSend), f);
 
-        // Gửi dữ liệu đến server
-        if (send(client, buf, strlen(buf), 0) == -1)
+        // Gui data den server
+        if (send(client, bufSend, strlen(bufSend), 0) == -1)
         {
             perror("send() failed");
             exit(EXIT_FAILURE);
