@@ -17,7 +17,7 @@ int main()
 
     bind(receiver, (struct sockaddr *)&addr, sizeof(addr));
 
-    char buf[16];
+    char buf[256];
 
     while (1)
     {
@@ -29,6 +29,13 @@ int main()
         }
 
         buf[ret] = 0;
-        printf("%d bytes received: %s\n", ret, buf);
+
+        FILE *f = fopen("file_receive.txt", "a");
+        fprintf(f, "%s", buf);
+        fclose(f);
+        
+        printf("Noi dung nhan duoc (<file name> | <content>): %s\n", buf);
+
+        
     }
 }
