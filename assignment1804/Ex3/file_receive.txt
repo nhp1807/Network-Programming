@@ -1,1 +1,1 @@
-file.txt | Xin chao
+file.txt | Xin chaofile.txt | Xin chao
