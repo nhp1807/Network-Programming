@@ -139,6 +139,7 @@ int main(int argc, char *argv[]){
                         // Lấy id và name của client
                         char id[20], name[50];
                         int ret = sscanf(msg, "%[^:]: %s", id, name);
+                        // Hàm trả về số biến được điền
                         if (ret == 2){
                             strcpy(clients[i].id, id);
                             strcpy(clients[i].name, name);
