@@ -8,6 +8,7 @@
 #include <time.h>
 #include <sys/ioctl.h>
 #include <errno.h>
+#include <poll.h>
 
 #define MAX_CLIENT 10
 #define MAX_MSG_LEN 1024
