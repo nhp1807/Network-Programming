@@ -2,7 +2,8 @@
     "files.associations": {
         "unistd.h": "c",
         "netdb.h": "c",
-        "ioctl.h": "c"
+        "ioctl.h": "c",
+        "string.h": "c"
     },
     "cmake.configureOnOpen": true
 }
